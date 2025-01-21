@@ -5,7 +5,10 @@ using UnityEngine;
 public class PlayerCtrl : MonoBehaviour
 {
     // 컴포넌트를 캐시 처리할 변수
-    private Transform tr;
+    [SerializeField]private Transform tr;
+    // 이동속도 변수
+    public float moveSpeed = 10.0f;
+
     void Start()
     {
         // Transform 컴포넌트를 추출해 변수에 대입
@@ -25,6 +28,8 @@ public class PlayerCtrl : MonoBehaviour
         // transform.position += new Vector3(0, 0, 1);
 
         // 정규화 백터를 사용한 코드
-        transform.position += Vector3.forward * 1;
+        // transform.position += Vector3.forward * 1;
+
+        tr.Translate(Vector3.forward * Time.deltaTime* v * moveSpeed);
     }
 }
