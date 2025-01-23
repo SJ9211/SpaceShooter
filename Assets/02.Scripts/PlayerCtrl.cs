@@ -6,6 +6,7 @@ public class PlayerCtrl : MonoBehaviour
 {
     // 컴포넌트를 캐시 처리할 변수
     private Transform tr;
+    private Animation anim;
     // 이동속도 변수
     public float moveSpeed = 10.0f;
     // 회전속도 변수
@@ -15,6 +16,11 @@ public class PlayerCtrl : MonoBehaviour
     {
         // Transform 컴포넌트를 추출해 변수에 대입
         tr = GetComponent<Transform>();
+        anim = GetComponent<Animation>();
+
+        // 애니메이션 실행
+        anim.Play("Idle");
+
     }
 
     // Update is called once per frame
@@ -39,6 +45,32 @@ public class PlayerCtrl : MonoBehaviour
         tr.Translate(moveDir * Time.deltaTime * moveSpeed);
         // Vector3.up 축을 기준으로 turnSpeed만큼의 속도를 회전
         tr.Rotate(Vector3.up * turnSpeed * Time.deltaTime * r);
+
+        // 주인공 애니메이션 설정
+        PlayerAnim(h,v);
     }
 
+    void PlayerAnim(float h, float v)
+    {
+        if(v >= 0.1f)
+        {
+            anim.CrossFade("RunF", 0.25f); // 전진 
+        }
+        else if (v <= -0.1f)
+        {
+            anim.CrossFade("RunB", 0.25f); // 후진
+        }
+        else if (h >= 0.1f)
+        {
+            anim.CrossFade("RunR", 0.25f); // 오른쪽
+        }
+        else if (h <= -0.1f)
+        {
+            anim.CrossFade("RunL", 0.25f);  // 왼쪽
+        }
+        else
+        {
+            anim.CrossFade("Idle", 0.25f); // 정지 시
+        }
+    }
 }
