@@ -574,8 +574,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   targetTr: {fileID: 1794260137}
-  distance: 10
-  height: 2
+  distance: 6.3
+  height: 2.1
+  damping: 0.1
+  targetOffset: 2
 --- !u!137 &1135656781 stripped
 SkinnedMeshRenderer:
   m_CorrespondingSourceObject: {fileID: 13700002, guid: f3cd25b3bf53c4adaaf087d862e435e6, type: 3}
@@ -766,7 +768,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 8
-  turnSpeed: 80
+  turnSpeed: 100
 --- !u!205 &1794260135
 LODGroup:
   m_ObjectHideFlags: 0
