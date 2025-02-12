@@ -14,12 +14,18 @@ public class FireCtrl : MonoBehaviour
     public AudioClip fireSfx;
     // AudioSource 컴포넌트를 저장하는 변수
     private new AudioSource audio;
+    private MeshRenderer muzzleFlash;
     void Start()
     {
         audio = GetComponent<AudioSource>();
+
+        // FirePos 하위에 있는 MuzzleFlash의 머터리얼 컴포넌트 추출
+        muzzleFlash = firePos.GetComponentInChildren<MeshRenderer>();
+        // 처음 시작할떄 비활성
+        muzzleFlash.enabled = false;
     }
 
-   
+
     void Update()
     {
         // 마우스 왼쪽 버튼을 클릭했을때 Fire 함수 호출
@@ -28,12 +34,29 @@ public class FireCtrl : MonoBehaviour
             Fire();
         }
     }
-    
+
     void Fire()
     {
         // Bullet 프리팹을 동적으로 생성 (생성할 객체, 위치, 회전)
         Instantiate(bullet, firePos.position, firePos.rotation);
         // 총소리 발생
         audio.PlayOneShot(fireSfx, 1.0f);
+
+        // 총구 화염 효과 코루틴(coroutine)함수 호출
+        // ShowMuzzleFlash();  오류는 안남 대신 적용 x 
+        // StartCoroutine("ShowMuzzleFlash"); 이것도가능하나, GC발생
+        StartCoroutine(ShowMuzzleFlash());
+
+    }
+
+    IEnumerator ShowMuzzleFlash()
+    {
+        // MuzzleFlash 활성화
+        muzzleFlash.enabled = true;
+        // 0.2초 동안 대기하는 동안 메시지 루프로 제어권을 양보
+        yield return new WaitForSeconds(0.2f);
+        // MuzzleFlash 비활성화
+        muzzleFlash.enabled = false;
+
     }
 }
