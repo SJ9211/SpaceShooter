@@ -23,6 +23,7 @@ public class RemoveBullet : MonoBehaviour
              Destroy(spark, 0.5f);            
              // 충돌한 게임오브젝트 삭제
              Destroy(coll.gameObject);
+           
         }
     }
 }
