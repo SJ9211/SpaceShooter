@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Data;
 using UnityEngine;
 
 public class PlayerCtrl : MonoBehaviour
@@ -7,13 +8,17 @@ public class PlayerCtrl : MonoBehaviour
     // 컴포넌트를 캐시 처리할 변수
     private Transform tr;
     private Animation anim;
-    // 이동속도 변수
-    public float moveSpeed = 10.0f;
-    // 회전속도 변수
-    public float turnSpeed = 80.0f;
+    private readonly float initHp = 100.0f;  //초기 생명값
+    private readonly float DAMAGE_HP = 10.0f;
+   
+    public float currHp; // 현재 생명값
+    public float moveSpeed = 10.0f;         // 이동속도 변수
+    public float turnSpeed = 80.0f;         // 회전속도 변수
+
 
     IEnumerator Start()
     {
+        currHp = initHp;
         // Transform 컴포넌트를 추출해 변수에 대입
         tr = GetComponent<Transform>();
         anim = GetComponent<Animation>();
@@ -76,5 +81,24 @@ public class PlayerCtrl : MonoBehaviour
         {
             anim.CrossFade("Idle", 0.25f); // 정지 시
         }
+    }
+
+    private void OnTriggerEnter(Collider coll)
+    {
+        if ( currHp >= 0.0f && coll.CompareTag("PUNCH"))
+        {
+            currHp -= DAMAGE_HP;
+            Debug.Log($"Player hp = {currHp/initHp}");
+        }
+        // Player의 생명이 0이하면 사망처리
+        if ( currHp <= 0.0f)
+        {
+            PlayerDie();
+        }
+    }
+
+    private void PlayerDie()
+    {
+        Debug.Log("Player Die!");
     }
 }

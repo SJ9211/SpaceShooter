@@ -9,7 +9,7 @@ public class MonsterCtrl : MonoBehaviour
     // Animator 해시값 추출
     private readonly int hashTrace = Animator.StringToHash("IsTrace");
     private readonly int hashAttack = Animator.StringToHash("IsAttack");
-    private readonly int hashHit = Animator.StringToHash("Hit");
+    private readonly int hashHit = Animator.StringToHash("Hit"); 
     public const float TIMER_CHECK = 0.3f;
     public enum State
     {
@@ -29,6 +29,7 @@ public class MonsterCtrl : MonoBehaviour
     private Transform playerTr;
     private NavMeshAgent agent;
     private Animator anim;
+    private GameObject bloodEffect;  // 혈흔 효과 프리팹
     #endregion
     void Start()
     {
@@ -36,6 +37,7 @@ public class MonsterCtrl : MonoBehaviour
         playerTr = GameObject.FindWithTag("PLAYER").GetComponent<Transform>();
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
+        bloodEffect = Resources.Load<GameObject>("BloodSprayEffect");
         //agent.destination = playrTr.position;
         // 몬스터의 상태를 체크하는 코루틴 함수 호출
         StartCoroutine(CheckMonsterState());
@@ -114,6 +116,18 @@ public class MonsterCtrl : MonoBehaviour
             Destroy(collision.gameObject);
             // 피격 애니메이션 실행
             anim.SetTrigger(hashHit);
+
+            // 총알 충돌 지점
+            Vector3 pos = collision.GetContact(0).point;
+            // 총알 총돌 지접의 법선 벡터
+            Quaternion rot = Quaternion.LookRotation(-collision.GetContact(0).normal);
+            ShowBloodEffect(pos, rot);
         }
+    }
+    private void ShowBloodEffect(Vector3 pos, Quaternion rot)
+    {
+        // 혈흔 효과 생성
+        GameObject blood = Instantiate<GameObject>(bloodEffect, pos, rot, monsterTr);
+        Destroy(blood, 1.0f);
     }
 }
