@@ -1,5 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
+using Unity.VisualScripting;
 using UnityEngine;
 
 // 반드시 필요한 컴포넌트를 명시해 해당 컴포넌트가 삭제 안되도록 하는 어트리뷰트
@@ -12,9 +14,20 @@ public class FireCtrl : MonoBehaviour
     public Transform firePos;
     // 총소리에 사용할 오디오
     public AudioClip fireSfx;
+    
     // AudioSource 컴포넌트를 저장하는 변수
     private new AudioSource audio;
     private MeshRenderer muzzleFlash;
+    private bool isPlayerDie;
+
+    void OnEnable()
+    {
+        PlayerCtrl.OnPlayerDie += this.OnPlayerDie;
+    }
+    void OnDisable()
+    {
+        PlayerCtrl.OnPlayerDie -= this.OnPlayerDie;
+    }
     void Start()
     {
         audio = GetComponent<AudioSource>();
@@ -23,11 +36,16 @@ public class FireCtrl : MonoBehaviour
         muzzleFlash = firePos.GetComponentInChildren<MeshRenderer>();
         // 처음 시작할떄 비활성
         muzzleFlash.enabled = false;
+        isPlayerDie = false;
     }
 
-
+    public void OnPlayerDie()
+    {
+        isPlayerDie = true;
+    }
     void Update()
     {
+        if (isPlayerDie) return;
         // 마우스 왼쪽 버튼을 클릭했을때 Fire 함수 호출
         if (Input.GetMouseButtonDown(0))
         {
