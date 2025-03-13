@@ -1,5 +1,6 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
@@ -9,7 +10,8 @@ public class GameManager : MonoBehaviour
     #region Public
     // 몬스터가 출현할 위치를 저장
     // public Transform[] points;
-
+    public const string KEY_SCORE = "TOT_SCORE";
+    public const int MAX_SCORE = 99999;
     // 몬스터가 출현할 위치를 저장할 List 타입 변수
     public List<Transform> points = new List<Transform>();
     // 몬스터를 미리 생성해 저장할 리스트 
@@ -18,10 +20,14 @@ public class GameManager : MonoBehaviour
     public int maxMonsters = 10;
     public GameObject monster;
     public float createTime = 3.0f; // 몬스터의 생성 간격
+    public TMP_Text scoreText; // 스코어 텍스트를 연결할 변수
+    public GameObject PanelGameOver;
+       
     #endregion
 
     #region  private
     private bool isGameOver;
+    private int totScore = 0; // 누적 점수를 기록하기 위한 변수
 
     #endregion
 
@@ -34,6 +40,7 @@ public class GameManager : MonoBehaviour
             isGameOver = value;
             if (isGameOver)
             {
+                PanelGameOver.SetActive(true);
                 CancelInvoke("CreateMonster");
             }
         }
@@ -57,6 +64,7 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
+        PanelGameOver.SetActive(false);
         // 몬스터 오브젝트 풀 생성
         CreateMonsterPool();
 
@@ -83,6 +91,10 @@ public class GameManager : MonoBehaviour
 
         // 일정한 시간 간격으로 함수를 호출
         InvokeRepeating("CreateMonster", 2.0f, createTime);
+
+        // 스코어 점수 출력
+        totScore = PlayerPrefs.GetInt(KEY_SCORE, 0);
+        DisplayScore(0);
     }
 
     void CreateMonster()
@@ -136,4 +148,18 @@ public class GameManager : MonoBehaviour
 
         return null;
     }
+
+    public void DisplayScore(int score)
+    {
+        totScore += score;
+        // 스코어 최대수치 
+        if ( totScore > MAX_SCORE)
+        {
+            totScore = MAX_SCORE;
+        }
+        scoreText.text = $"<color=#00ff00>SCORE : </color> <color=#ff0000>{totScore:#,##0}</color>";
+        // 스코어 저장
+        PlayerPrefs.SetInt(KEY_SCORE, totScore);
+    }
+
 }
