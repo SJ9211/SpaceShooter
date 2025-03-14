@@ -172,38 +172,41 @@ public class MonsterCtrl : MonoBehaviour
         {
             // 충돌한 총알 삭제
             Destroy(collision.gameObject);
-            // 피격 애니메이션 실행
-            anim.SetTrigger(hashHit);
-
-            // 총알 충돌 지점
-            Vector3 pos = collision.GetContact(0).point;
-            // 총알 총돌 지접의 법선 벡터
-            Quaternion rot = Quaternion.LookRotation(-collision.GetContact(0).normal);
-            ShowBloodEffect(pos, rot);
-
-            // 몬스터의 HP 처리
-            hp -= HIT_MONSTER_HP;
-            if ( hp <= 0)
-            {
-                state = State.DIE;
-                GameManager.instance.DisplayScore(50);
-            }
         }
     }
-    private void ShowBloodEffect(Vector3 pos, Quaternion rot)
+    public void OnDamage(Vector3 pos, Vector3 normal)
     {
-        // 혈흔 효과 생성
-        GameObject blood = Instantiate<GameObject>(bloodEffect, pos, rot, monsterTr);
-        Destroy(blood, 1.0f);
+        // 피격 애니메이션 실행
+        anim.SetTrigger(hashHit);
+          
+        // 총알 총돌 지접의 법선 벡터
+        Quaternion rot = Quaternion.LookRotation(normal);
+        ShowBloodEffect(pos, rot);
+
+        // 몬스터의 HP 처리
+        hp -= HIT_MONSTER_HP;
+        if (hp <= 0)
+        {
+            state = State.DIE;
+            GameManager.instance.DisplayScore(50);
+        }
     }
 
-    private void OnTriggerEnter(Collider other)
-    {
-        Debug.Log(other.gameObject.name);
-    }
 
-    void OnPlayerDie()
-    {
+private void ShowBloodEffect(Vector3 pos, Quaternion rot)
+{
+    // 혈흔 효과 생성
+    GameObject blood = Instantiate<GameObject>(bloodEffect, pos, rot, monsterTr);
+    Destroy(blood, 1.0f);
+}
+
+private void OnTriggerEnter(Collider other)
+{
+    Debug.Log(other.gameObject.name);
+}
+
+void OnPlayerDie()
+{
         // 몬스터의 상태를 체크하는 코루틴 함수를 모두정지
         StopAllCoroutines();
 

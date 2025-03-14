@@ -4,6 +4,7 @@ using TMPro;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
+using UnityEditor;
 
 public class GameManager : MonoBehaviour
 {
@@ -162,4 +163,11 @@ public class GameManager : MonoBehaviour
         PlayerPrefs.SetInt(KEY_SCORE, totScore);
     }
 
+    // 에디터에 내가 만든 파일이 만들어짐
+    [MenuItem("JungKang/Reset score")]
+    public static void ResetScore()
+    {
+        PlayerPrefs.SetInt(KEY_SCORE, 0);
+        Debug.Log("Successfully reset score");
+    }
 }

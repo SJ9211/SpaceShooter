@@ -2,12 +2,14 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Runtime.InteropServices;
 using Unity.VisualScripting;
+using UnityEditor;
 using UnityEngine;
 
 // 반드시 필요한 컴포넌트를 명시해 해당 컴포넌트가 삭제 안되도록 하는 어트리뷰트
 [RequireComponent(typeof(AudioSource))]
 public class FireCtrl : MonoBehaviour
 {
+    public const float BULLET_DISTANCE = 50.0f;
     // 총알 프리팹
     public GameObject bullet;
     // 총알 발사 좌표
@@ -19,6 +21,7 @@ public class FireCtrl : MonoBehaviour
     private new AudioSource audio;
     private MeshRenderer muzzleFlash;
     private bool isPlayerDie;
+    private RaycastHit hit;
 
     void OnEnable()
     {
@@ -46,10 +49,29 @@ public class FireCtrl : MonoBehaviour
     void Update()
     {
         if (isPlayerDie) return;
+
+        // Ray를 시각적으로 표시하기 위해 사용
+        Debug.DrawRay(firePos.position, firePos.forward * BULLET_DISTANCE, Color.green);
+
         // 마우스 왼쪽 버튼을 클릭했을때 Fire 함수 호출
         if (Input.GetMouseButtonDown(0))
         {
             Fire();
+            int mask = (1 << LayerMask.NameToLayer("MONSTER_BOOY"))
+                        + (1 << LayerMask.NameToLayer("BARREL"));
+            // 특정된 비트를 빼는법
+            mask = ~mask;
+            // Ray를 발사
+            if (Physics.Raycast(firePos.position,   // 광선 발사 원점
+                                firePos.forward,    // 광선 발사 방향
+                                out hit, BULLET_DISTANCE, 
+                                //1 << 6(6은 특정 레이어 지칭)
+                                1 << LayerMask.NameToLayer("MONSTER_BOOY"))) // 광선에 맞은 결과 데이터, 거리 , 감지하는 범위인 레이어 마스크.
+        
+        { 
+            Debug.Log($"Hit={hit.transform.name}");
+            hit.transform.GetComponent<MonsterCtrl>()?.OnDamage(hit.point, hit.normal);
+        }
         }
     }
 
