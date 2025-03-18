@@ -4,6 +4,8 @@ using Unity.VisualScripting;
 using UnityEditorInternal;
 using UnityEngine;
 using UnityEngine.AI;
+using UnityEngine.Timeline;
+
 public class MonsterCtrl : MonoBehaviour
 {
     private const int HIT_MONSTER_HP = 10;
@@ -67,11 +69,25 @@ public class MonsterCtrl : MonoBehaviour
         monsterTr = GetComponent<Transform>();
         playerTr = GameObject.FindWithTag("PLAYER").GetComponent<Transform>();
         agent = GetComponent<NavMeshAgent>();
+        agent.updateRotation = false;
         anim = GetComponent<Animator>();
         bloodEffect = Resources.Load<GameObject>("BloodSprayEffect");
         //agent.destination = playrTr.position;
 
 
+    }
+
+    void Update()
+    {
+        // 목적지까지 남은 거리로 회전 여부 판단
+        if (agent.remainingDistance >= 2.0f)
+        {
+            Vector3 direction = agent.desiredVelocity;
+            // 회전 각도 산출
+            Quaternion rot = Quaternion.LookRotation(direction);
+            // 구면 선형보간 함수로 부드러운 회전 처리
+            monsterTr.rotation = Quaternion.Slerp(monsterTr.rotation, rot, Time.deltaTime *10.0f);
+        }
     }
 
     IEnumerator CheckMonsterState()

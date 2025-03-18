@@ -57,16 +57,16 @@ public class FireCtrl : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             Fire();
-            int mask = (1 << LayerMask.NameToLayer("MONSTER_BOOY"))
-                        + (1 << LayerMask.NameToLayer("BARREL"));
-            // 특정된 비트를 빼는법
-            mask = ~mask;
+            // int mask = (1 << LayerMask.NameToLayer("MONSTER_BOOY"))
+            //             + (1 << LayerMask.NameToLayer("BARREL"));
+            // // 특정된 비트를 빼는법
+            // mask = ~mask;
             // Ray를 발사
             if (Physics.Raycast(firePos.position,   // 광선 발사 원점
                                 firePos.forward,    // 광선 발사 방향
                                 out hit, BULLET_DISTANCE, 
                                 //1 << 6(6은 특정 레이어 지칭)
-                                1 << LayerMask.NameToLayer("MONSTER_BOOY"))) // 광선에 맞은 결과 데이터, 거리 , 감지하는 범위인 레이어 마스크.
+                                1 << LayerMask.NameToLayer("MONSTER_BODY"))) // 광선에 맞은 결과 데이터, 거리 , 감지하는 범위인 레이어 마스크.
         
         { 
             Debug.Log($"Hit={hit.transform.name}");

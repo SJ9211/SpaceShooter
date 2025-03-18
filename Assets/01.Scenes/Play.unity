@@ -2742,8 +2742,12 @@ PrefabInstance:
       value: Stair
       objectReference: {fileID: 0}
     - target: {fileID: 100000, guid: b9a1dcca315d0a647a257cdb8c69de3d, type: 3}
+      propertyPath: m_IsActive
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 100000, guid: b9a1dcca315d0a647a257cdb8c69de3d, type: 3}
       propertyPath: m_StaticEditorFlags
-      value: 40
+      value: 72
       objectReference: {fileID: 0}
     - target: {fileID: 400000, guid: b9a1dcca315d0a647a257cdb8c69de3d, type: 3}
       propertyPath: m_RootOrder
@@ -2813,7 +2817,7 @@ MeshCollider:
   m_Enabled: 1
   serializedVersion: 4
   m_Convex: 1
-  m_CookingOptions: 30
+  m_CookingOptions: 28
   m_Mesh: {fileID: 4300000, guid: b9a1dcca315d0a647a257cdb8c69de3d, type: 3}
 --- !u!1001 &1351083472
 PrefabInstance:
