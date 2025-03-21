@@ -5,6 +5,8 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UIElements;
 using UnityEditor;
+using JetBrains.Annotations;
+using UnityEngine.Rendering;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,6 +14,7 @@ public class GameManager : MonoBehaviour
     // 몬스터가 출현할 위치를 저장
     // public Transform[] points;
     public const string KEY_SCORE = "TOT_SCORE";
+    public const int MAX_KILL = 99;
     public const int MAX_SCORE = 99999;
     // 몬스터가 출현할 위치를 저장할 List 타입 변수
     public List<Transform> points = new List<Transform>();
@@ -23,6 +26,7 @@ public class GameManager : MonoBehaviour
     public float createTime = 3.0f; // 몬스터의 생성 간격
     public TMP_Text scoreText; // 스코어 텍스트를 연결할 변수
     public GameObject PanelGameOver;
+    public TMP_Text killText;
        
     #endregion
 
@@ -30,8 +34,23 @@ public class GameManager : MonoBehaviour
     private bool isGameOver;
     private int totScore = 0; // 누적 점수를 기록하기 위한 변수
 
+    #region  Propoty
+    private int killCount= 0;
     #endregion
 
+    #endregion
+    public int KillCount
+    {
+        get { return killCount;}
+        set { 
+            killCount = value;
+            if ( killCount > MAX_KILL)
+            {
+                killCount = MAX_KILL;
+            }
+            killText.text = $"{KillCount:00}";
+        }
+    }
 
     public bool IsGameOver // 게임의 종료 여부를 저장할 프로퍼티
     {
@@ -117,7 +136,6 @@ public class GameManager : MonoBehaviour
         // 추출한 몬스터 활성화
         _monster?.SetActive(true);
     }
-
     // 오브젝트 풀에 몬스터 생성
     private void CreateMonsterPool()
     {
