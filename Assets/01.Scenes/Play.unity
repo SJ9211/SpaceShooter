@@ -449,6 +449,7 @@ MonoBehaviour:
   createTime: 3
   scoreText: {fileID: 247083386}
   PanelGameOver: {fileID: 1382564998}
+  killText: {fileID: 1988506822}
 --- !u!4 &372934267
 Transform:
   m_ObjectHideFlags: 0
